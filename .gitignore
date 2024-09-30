@@ -1,2 +1,2 @@
-*.mod
+go.mod
 memory_simulator
