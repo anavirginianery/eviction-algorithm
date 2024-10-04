@@ -4,9 +4,10 @@ import (
 	"container/list"
 )
 
-type PageLRULists struct {
-	id       int
-	inActive bool
+type Page2Lists struct {
+	id         int
+	inActive   bool
+	referenced bool
 }
 
 type LRU2Lists struct {
@@ -29,16 +30,18 @@ func NewLRU2Lists(capacity int) *LRU2Lists {
 	}
 }
 
-func (lru *LRU2Lists) Add(PageLRUListsID int) bool {
-	if elem, found := lru.cache[PageLRUListsID]; found {
-		PageLRULists := elem.Value.(*PageLRULists)
-		if PageLRULists.inActive {
+func (lru *LRU2Lists) Add(Page2ListsID int) bool {
+	if elem, found := lru.cache[Page2ListsID]; found {
+		Page2Lists := elem.Value.(*Page2Lists)
+		if Page2Lists.inActive {
+			Page2Lists.referenced = true
 			lru.activeList.MoveToFront(elem)
 		} else {
 			lru.inactiveList.Remove(elem)
-			PageLRULists.inActive = true
+			Page2Lists.inActive = true
+			Page2Lists.referenced = true
 			lru.activeList.PushFront(elem.Value)
-			lru.cache[PageLRUListsID] = lru.activeList.Front()
+			lru.cache[Page2ListsID] = lru.activeList.Front()
 			if lru.activeList.Len() > lru.activeSize {
 				lru.moveToInactive()
 			}
@@ -50,48 +53,58 @@ func (lru *LRU2Lists) Add(PageLRUListsID int) bool {
 		lru.evict()
 	}
 
-	PageLRULists := &PageLRULists{id: PageLRUListsID, inActive: false}
-	elem := lru.inactiveList.PushFront(PageLRULists)
-	lru.cache[PageLRUListsID] = elem
+	Page2Lists := &Page2Lists{id: Page2ListsID, inActive: false, referenced: true}
+	elem := lru.inactiveList.PushFront(Page2Lists)
+	lru.cache[Page2ListsID] = elem
 	if lru.inactiveList.Len() > lru.inactiveSize {
-		lru.removeFromInactive()
+		lru.evict()
 	}
 	return false
 }
 
 func (lru *LRU2Lists) moveToInactive() {
-	elem := lru.activeList.Back()
-	if elem != nil {
-		PageLRULists := elem.Value.(*PageLRULists)
-		lru.activeList.Remove(elem)
-		PageLRULists.inActive = false
-		lru.inactiveList.PushFront(elem.Value)
-		lru.cache[PageLRULists.id] = lru.inactiveList.Front()
+	for {
+		elem := lru.activeList.Back()
+		if elem == nil {
+			return
+		}
+		Page2Lists := elem.Value.(*Page2Lists)
 
-		if lru.inactiveList.Len() > lru.inactiveSize {
-			lru.removeFromInactive()
+		if Page2Lists.referenced {
+			Page2Lists.referenced = false
+			lru.activeList.MoveToFront(elem)
+		} else {
+			lru.activeList.Remove(elem)
+			Page2Lists.inActive = false
+			lru.inactiveList.PushFront(elem.Value)
+			lru.cache[Page2Lists.id] = lru.inactiveList.Front()
+			if lru.inactiveList.Len() > lru.inactiveSize {
+				lru.evict()
+			}
+			break
 		}
 	}
 }
 
-func (lru *LRU2Lists) removeFromInactive() {
-	elem := lru.inactiveList.Back()
-	if elem != nil {
-		PageLRULists := elem.Value.(*PageLRULists)
-		lru.inactiveList.Remove(elem)
-		delete(lru.cache, PageLRULists.id)
-	}
-}
-
 func (lru *LRU2Lists) evict() {
-	if lru.inactiveList.Len() > 0 {
-		lru.removeFromInactive()
-		return
-	}
-	elem := lru.activeList.Back()
-	if elem != nil {
-		PageLRULists := elem.Value.(*PageLRULists)
-		lru.activeList.Remove(elem)
-		delete(lru.cache, PageLRULists.id)
+	for {
+		if lru.inactiveList.Len() > 0 {
+			elem := lru.inactiveList.Back()
+			if elem == nil {
+				return
+			}
+			page := elem.Value.(*Page2Lists)
+			// Verifica o bit de referência
+			if page.referenced {
+				// Se a página foi referenciada, move para o início da lista inativa
+				page.referenced = false // Reseta o bit
+				lru.inactiveList.MoveToFront(elem)
+			} else {
+				// Se a página não foi referenciada, remove do cache completamente
+				lru.inactiveList.Remove(elem)
+				delete(lru.cache, page.id)
+				break
+			}
+		}
 	}
 }

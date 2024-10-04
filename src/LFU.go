@@ -4,7 +4,7 @@ import (
 	"container/heap"
 )
 
-type PageLRU struct {
+type PageLFU struct {
 	id        int
 	frequency int
 	index     int
@@ -12,41 +12,41 @@ type PageLRU struct {
 
 type LFUMemory struct {
 	capacity int
-	cache    map[int]*PageLRU
+	memory   map[int]*PageLFU
 	minHeap  PageHeap
 }
 
 func NewLFUMemory(capacity int) *LFUMemory {
 	return &LFUMemory{
 		capacity: capacity,
-		cache:    make(map[int]*PageLRU),
+		memory:   make(map[int]*PageLFU),
 		minHeap:  make(PageHeap, 0, capacity),
 	}
 }
 
-func (lfu *LFUMemory) Add(pageLRUID int) bool {
-	if pageLRU, found := lfu.cache[pageLRUID]; found {
-		pageLRU.frequency++
-		heap.Fix(&lfu.minHeap, pageLRU.index)
+func (lfu *LFUMemory) Add(pageLFUID int) bool {
+	if pageLFU, found := lfu.memory[pageLFUID]; found {
+		pageLFU.frequency++
+		heap.Fix(&lfu.minHeap, pageLFU.index)
 		return true
 	}
 
-	if len(lfu.cache) >= lfu.capacity {
+	if len(lfu.memory) >= lfu.capacity {
 		lfu.evict()
 	}
 
-	newPageLRU := &PageLRU{id: pageLRUID, frequency: 1}
-	heap.Push(&lfu.minHeap, newPageLRU)
-	lfu.cache[pageLRUID] = newPageLRU
+	newPageLFU := &PageLFU{id: pageLFUID, frequency: 1}
+	heap.Push(&lfu.minHeap, newPageLFU)
+	lfu.memory[pageLFUID] = newPageLFU
 	return false
 }
 
 func (lfu *LFUMemory) evict() {
-	leastUsedPageLRU := heap.Pop(&lfu.minHeap).(*PageLRU)
-	delete(lfu.cache, leastUsedPageLRU.id)
+	leastUsedPageLFU := heap.Pop(&lfu.minHeap).(*PageLFU)
+	delete(lfu.memory, leastUsedPageLFU.id)
 }
 
-type PageHeap []*PageLRU
+type PageHeap []*PageLFU
 
 func (h PageHeap) Len() int           { return len(h) }
 func (h PageHeap) Less(i, j int) bool { return h[i].frequency < h[j].frequency }
@@ -57,17 +57,17 @@ func (h PageHeap) Swap(i, j int) {
 }
 
 func (h *PageHeap) Push(x interface{}) {
-	pageLRU := x.(*PageLRU)
-	pageLRU.index = len(*h)
-	*h = append(*h, pageLRU)
+	pageLFU := x.(*PageLFU)
+	pageLFU.index = len(*h)
+	*h = append(*h, pageLFU)
 }
 
 func (h *PageHeap) Pop() interface{} {
 	old := *h
 	n := len(old)
-	pageLRU := old[n-1]
+	pageLFU := old[n-1]
 	old[n-1] = nil
-	pageLRU.index = -1
+	pageLFU.index = -1
 	*h = old[0 : n-1]
-	return pageLRU
+	return pageLFU
 }

@@ -63,7 +63,7 @@ func simulate(memorySimulator interface{}, trace chan Request, output chan strin
 }
 
 func main() {
-	algorithm := flag.String("eviction_algo", "LRU", "Escolha o algoritmo de substituição: LRU, Clock, LFU")
+	algorithm := flag.String("eviction_algo", "LRU", "Escolha o algoritmo de substituição: LRU, Clock, LFU, 2Lists")
 	cacheSize := flag.Int("memory_size", 4, "Capacidade do cache")
 	flag.Parse()
 
