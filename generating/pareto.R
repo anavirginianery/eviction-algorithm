@@ -23,7 +23,9 @@ option_list = list(
   make_option(c("-o", "--output"), type = "character", default = "access_trace.csv",
               help = "Nome do arquivo de saída", metavar = "character"),
   make_option(c("-g", "--graph_output"), type = "character", default = "access_histogram.png",
-              help = "Nome do arquivo de gráfico de saída", metavar = "character")
+              help = "Nome do arquivo de gráfico de saída", metavar = "character"),
+  make_option(c("-r", "--pareto_ratio"), type = "numeric", default = 0.8,
+              help = "Proporção de acessos baseados em Pareto (entre 0 e 1)", metavar = "numeric")
 )
 
 # Parsing dos argumentos da linha de comando
@@ -37,6 +39,7 @@ print(paste("num_accesses:", opt$num_accesses))
 print(paste("num_pages:", opt$num_pages))
 print(paste("Arquivo de saída:", opt$output))
 print(paste("Arquivo do gráfico de saída:", opt$graph_output))
+print(paste("Proporção de acessos Pareto:", opt$pareto_ratio))
 
 # Parâmetros de geração a partir dos argumentos fornecidos
 alpha <- opt$alpha
@@ -45,6 +48,7 @@ num_accesses <- opt$num_accesses
 num_pages <- opt$num_pages
 output_file <- opt$output
 graph_output <- opt$graph_output
+pareto_ratio <- opt$pareto_ratio
 
 # Gerando a distribuição de Pareto para a popularidade das páginas
 pareto <- rpareto(num_pages, scale = 1, shape = alpha)
@@ -53,11 +57,15 @@ accesses_per_page <- ceiling(pareto)
 # Distribuindo os tempos de acesso com uma distribuição de Poisson
 arrival_times <- cumsum(rpois(num_accesses, lambda))
 
-# Gerando metade dos acessos com localidade temporal (baseado em Pareto)
-temporal_accesses <- sample(1:num_pages, num_accesses / 2, replace = TRUE, prob = accesses_per_page)
+# Calculando a quantidade de acessos baseados em Pareto e acessos aleatórios
+num_pareto_accesses <- floor(num_accesses * pareto_ratio)
+num_random_accesses <- num_accesses - num_pareto_accesses
 
-# Gerando metade dos acessos de forma aleatória
-random_accesses <- sample(1:num_pages, num_accesses / 2, replace = TRUE)
+# Gerando acessos com alta frequência (baseado em Pareto)
+temporal_accesses <- sample(1:num_pages, num_pareto_accesses, replace = TRUE, prob = accesses_per_page)
+
+# Gerando acessos de forma aleatória
+random_accesses <- sample(1:num_pages, num_random_accesses, replace = TRUE)
 
 # Combinando os dois padrões de acesso
 page_ids <- c(temporal_accesses, random_accesses)
@@ -84,4 +92,3 @@ ggplot(access_trace, aes(x = PageID)) +
 dev.off()
 
 cat("Gráfico salvo em:", graph_output, "\n")
-
