@@ -1,7 +1,7 @@
 # Para o trace access_trace_aleatorio.csv com as diferentes capacidades
 
 go run Belady.go --input ./traces/access_trace_aleatorio.csv --capacity 5 > ./output/output_aleatorio_belady_5.csv
-go run Belady.go --input /.traces/access_trace_aleatorio.csv --capacity 10 > ./output/output_aleatorio_belady_10.csv
+go run Belady.go --input ./traces/access_trace_aleatorio.csv --capacity 10 > ./output/output_aleatorio_belady_10.csv
 go run Belady.go --input ./traces/access_trace_aleatorio.csv --capacity 20 > ./output/output_aleatorio_belady_20.csv
 go run Belady.go --input ./traces/access_trace_aleatorio.csv --capacity 25 > ./output/output_aleatorio_belady_25.csv
 go run Belady.go --input ./traces/access_trace_aleatorio.csv --capacity 40 > ./output/output_aleatorio_belady_40.csv

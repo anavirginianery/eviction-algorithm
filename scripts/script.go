@@ -11,8 +11,8 @@ import (
 func processTrace(filename string) {
 	name := strings.Split(filename, ".")[0]
 
-	policy := strings.Split(name, "_")[0]
-	capacity := strings.Split(name, "_")[1]
+	policy := strings.Split(name, "_")[2]
+	capacity := strings.Split(name, "_")[3]
 
 	file, err := os.Open(os.Args[1] + "/" + filename)
 	if err != nil {

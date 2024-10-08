@@ -1,12 +1,6 @@
-#install.packages("optparse")
-#install.packages("VGAM")
-#install.packages("dplyr")
-#install.packages("ggplot2")
-
 library(optparse)
 library(VGAM)
 library(dplyr)
-library(ggplot2)
 
 option_list = list(
   make_option(c("-a", "--alpha"), type = "numeric", default = 1.2,
@@ -66,14 +60,3 @@ access_trace <- data.frame(
 write.csv(access_trace, file = output_file, row.names = FALSE)
 
 cat("Arquivo gerado:", output_file, "\n")
-
-png(graph_output, width = 800, height = 600)
-ggplot(access_trace, aes(x = PageID)) +
-  geom_histogram(binwidth = 1, fill = "blue", color = "black", alpha = 0.7) +
-  labs(title = "Distribuição de Acessos às Páginas",
-       x = "ID da Página",
-       y = "Frequência de Acessos") +
-  theme_minimal()
-dev.off()
-
-cat("Gráfico salvo em:", graph_output, "\n")
