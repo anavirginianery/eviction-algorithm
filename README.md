@@ -69,8 +69,11 @@ Este gerador permite configurar páginas com alta frequência e gerar uma carga 
 
 Parâmetros:
 --num_accesses: Número total de acessos a serem simulados.
+
 --num_pages: Número total de páginas que podem ser acessadas.
+
 --num_high_freq_pages: Número de páginas que serão acessadas com alta frequência.
+
 --high_freq_ratio: Proporção dos acessos que se concentram nas páginas de alta frequência.
 
 Para gerar uma carga de trabalho com acessos de páginas de alta frequência, execute o seguinte comando:
