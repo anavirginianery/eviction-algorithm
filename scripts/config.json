@@ -1,0 +1,10 @@
+{
+    "algorithms": ["LRU", "LFU", "Clock", "2Lists"],
+    "capacities": [5, 10, 20, 25, 40, 50],
+    "traces": [
+    "/home/anavirginia/Documentos/SO/eviction-algorithm-comparison/eviction-algorithm/traces/access_trace_localidade.csv",
+      "/home/anavirginia/Documentos/SO/eviction-algorithm-comparison/eviction-algorithm/traces/access_trace_aleatorio.csv",
+      "/home/anavirginia/Documentos/SO/eviction-algorithm-comparison/eviction-algorithm/traces/access_trace_altaFrequencia.csv"
+    ]
+  }
+  

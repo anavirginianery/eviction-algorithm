@@ -64,20 +64,20 @@ func simulate(memorySimulator interface{}, trace chan Request, output chan strin
 
 func main() {
 	algorithm := flag.String("eviction_algo", "LRU", "Escolha o algoritmo de substituição: LRU, Clock, LFU, 2Lists")
-	cacheSize := flag.Int("memory_size", 4, "Capacidade do cache")
+	memorySize := flag.Int("memory_size", 4, "Capacidade do memory")
 	flag.Parse()
 
 	var memorySimulator interface{}
 
 	switch *algorithm {
 	case "LRU":
-		memorySimulator = NewLRUMemory(*cacheSize)
+		memorySimulator = NewLRUMemory(*memorySize)
 	case "Clock":
-		memorySimulator = NewClockMemory(*cacheSize)
+		memorySimulator = NewClockMemory(*memorySize)
 	case "LFU":
-		memorySimulator = NewLFUMemory(*cacheSize)
+		memorySimulator = NewLFUMemory(*memorySize)
 	case "2Lists":
-		memorySimulator = NewLRU2Lists(*cacheSize)
+		memorySimulator = NewLRU2Lists(*memorySize)
 	default:
 		fmt.Println("Algoritmo inválido. Escolha entre LRU, Clock ou LFU.")
 		return

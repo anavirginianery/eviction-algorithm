@@ -56,7 +56,7 @@ func (bc BeladyMemory) findPageToEvict(currentIndex int) int {
 
 func (bc BeladyMemory) Simulate() {
 	hits, misses := 0, 0
-
+	fmt.Printf("timestamp,pageID,status\n")
 	for i, access := range bc.trace {
 		pageID := access.PageID
 
