@@ -68,6 +68,7 @@ R -e "install.packages('ggplot2')"
 Este gerador permite configurar páginas com alta frequência e gerar uma carga mista, onde páginas de alta frequência são intercaladas com acessos aleatórios.
 
 Parâmetros:
+
 --num_accesses: Número total de acessos a serem simulados.
 
 --num_pages: Número total de páginas que podem ser acessadas.
@@ -79,7 +80,7 @@ Parâmetros:
 Para gerar uma carga de trabalho com acessos de páginas de alta frequência, execute o seguinte comando:
 
 ```bash
-Rscript alta_frequencia_generator.R --num_accesses 1000 --num_pages 50 --num_high_freq_pages 10 --high_freq_ratio 0.75 --output "access_trace_alta_frequencia.csv" --graph_output "access_histogram_alta_frequencia.png"
+Rscript alta_frequencia_generator.R --num_accesses 1000 --num_pages 50 --num_high_freq_pages 10 --high_freq_ratio 0.75 --output "access_trace_alta_frequencia.csv"
 ```
 
 ### Acessos com Localidade Temporal
@@ -87,8 +88,11 @@ Rscript alta_frequencia_generator.R --num_accesses 1000 --num_pages 50 --num_hig
 Este gerador utiliza uma distribuição de Pareto para gerar popularidade das páginas (localidade temporal) e uma distribuição de Poisson para gerar os tempos de chegada dos acessos.
 
 Parâmetros:
+
 --alpha: Parâmetro da distribuição Pareto, controlando a concentração de acessos nas páginas mais populares.
+
 --lambda: Taxa de chegada de acessos, controlando o intervalo médio de acessos na distribuição Poisson.
+
 --pareto_ratio: Proporção dos acessos baseada na distribuição Pareto.
 
 Para gerar uma carga de trabalho com alta localidade temporal, execute o seguinte comando:
