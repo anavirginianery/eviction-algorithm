@@ -13,8 +13,6 @@ option_list = list(
               help = "Número total de páginas", metavar = "integer"),
   make_option(c("-o", "--output"), type = "character", default = "access_trace.csv",
               help = "Nome do arquivo de saída", metavar = "character"),
-  make_option(c("-g", "--graph_output"), type = "character", default = "access_histogram.png",
-              help = "Nome do arquivo de gráfico de saída", metavar = "character"),
   make_option(c("-r", "--pareto_ratio"), type = "numeric", default = 0.8,
               help = "Proporção de acessos baseados em Pareto (entre 0 e 1)", metavar = "numeric")
 )
@@ -27,7 +25,6 @@ print(paste("lambda:", opt$lambda))
 print(paste("num_accesses:", opt$num_accesses))
 print(paste("num_pages:", opt$num_pages))
 print(paste("Arquivo de saída:", opt$output))
-print(paste("Arquivo do gráfico de saída:", opt$graph_output))
 print(paste("Proporção de acessos Pareto:", opt$pareto_ratio))
 
 alpha <- opt$alpha
@@ -35,7 +32,6 @@ lambda <- opt$lambda
 num_accesses <- opt$num_accesses
 num_pages <- opt$num_pages
 output_file <- opt$output
-graph_output <- opt$graph_output
 pareto_ratio <- opt$pareto_ratio
 
 pareto <- rpareto(num_pages, scale = 1, shape = alpha)

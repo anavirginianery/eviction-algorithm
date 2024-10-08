@@ -12,8 +12,7 @@ option_list = list(
               help = "Proporção de acessos das páginas de alta frequência (entre 0 e 1)", metavar = "numeric"),
   make_option(c("-o", "--output"), type = "character", default = "access_trace.csv",
               help = "Nome do arquivo de saída", metavar = "character"),
-  make_option(c("-g", "--graph_output"), type = "character", default = "access_histogram.png",
-              help = "Nome do arquivo de gráfico de saída", metavar = "character")
+
 )
 
 opt_parser = OptionParser(option_list = option_list)
@@ -24,14 +23,12 @@ print(paste("Número de páginas:", opt$num_pages))
 print(paste("Número de páginas de alta frequência:", opt$num_high_freq_pages))
 print(paste("Proporção de acessos das páginas de alta frequência:", opt$high_freq_ratio))
 print(paste("Arquivo de saída:", opt$output))
-print(paste("Arquivo do gráfico de saída:", opt$graph_output))
 
 num_accesses <- opt$num_accesses
 num_pages <- opt$num_pages
 num_high_freq_pages <- opt$num_high_freq_pages
 high_freq_ratio <- opt$high_freq_ratio
 output_file <- opt$output
-graph_output <- opt$graph_output
 
 num_high_freq_accesses <- floor(num_accesses * high_freq_ratio)
 num_random_accesses <- num_accesses - num_high_freq_accesses

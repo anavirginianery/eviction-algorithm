@@ -65,6 +65,14 @@ R -e "install.packages('ggplot2')"
 
 ### Acessos com Páginas de Alta Frequência
 
+Este gerador permite configurar páginas com alta frequência e gerar uma carga mista, onde páginas de alta frequência são intercaladas com acessos aleatórios.
+
+Parâmetros:
+--num_accesses: Número total de acessos a serem simulados.
+--num_pages: Número total de páginas que podem ser acessadas.
+--num_high_freq_pages: Número de páginas que serão acessadas com alta frequência.
+--high_freq_ratio: Proporção dos acessos que se concentram nas páginas de alta frequência.
+
 Para gerar uma carga de trabalho com acessos de páginas de alta frequência, execute o seguinte comando:
 
 ```bash
@@ -73,24 +81,23 @@ Rscript alta_frequencia_generator.R --num_accesses 1000 --num_pages 50 --num_hig
 
 ### Acessos com Localidade Temporal
 
-Para gerar uma carga de trabalho com alta localidade temporal, utilizando uma distribuição de Pareto para popularidade e distribuição de Poisson para intervalos de tempo, execute o seguinte comando:
+Este gerador utiliza uma distribuição de Pareto para gerar popularidade das páginas (localidade temporal) e uma distribuição de Poisson para gerar os tempos de chegada dos acessos.
+
+Parâmetros:
+--alpha: Parâmetro da distribuição Pareto, controlando a concentração de acessos nas páginas mais populares.
+--lambda: Taxa de chegada de acessos, controlando o intervalo médio de acessos na distribuição Poisson.
+--pareto_ratio: Proporção dos acessos baseada na distribuição Pareto.
+
+Para gerar uma carga de trabalho com alta localidade temporal, execute o seguinte comando:
 
 ```bash
-Rscript localidade_temporal_generator.R --alpha 1.2 --lambda 8 --num_accesses 1000 --num_pages 50 --pareto_ratio 0.9 --output "access_trace_localidade_temporal.csv" --graph_output "access_histogram_localidade_temporal.png"
+Rscript localidade_temporal_generator.R --alpha 1.2 --lambda 8 --num_accesses 1000 --num_pages 50 --pareto_ratio 0.9 --output "access_trace_localidade_temporal.csv"
 ```
 
-Esses geradores de carga permitem configurar:
-
-- Número total de acessos: quantidade de acessos simulados.
-- Número total de páginas: quantidade de páginas únicas que podem ser acessadas.
-- Proporção de acessos de alta frequência ou localidade temporal: nas cargas de alta frequência, controla a porcentagem de acessos concentrados em poucas páginas.
-- Parâmetro alpha: na distribuição de Pareto, afeta a concentração dos acessos nas páginas mais populares.
-- Parâmetro lambda: controla o intervalo médio entre os acessos na distribuição de Poisson.
-
-### Acessos com aleatoriedade
+### Rodando cargas de trabalho aleatórias
 
 Para gerar uma carga aleatória (sem alta frequência ou localidade temporal), utilize o seguinte comando:
 
 ```bash
-Rscript alta_frequencia_generator.R --num_accesses 1000 --num_pages 50 --high_freq_page 0 --high_freq_ratio 0.0 --output "access_trace_aleatorio.csv" --graph_output "access_histogram_aleatorio.png"
+Rscript alta_frequencia_generator.R --num_accesses 1000 --num_pages 50 --high_freq_page 0 --high_freq_ratio 0.0 --output "access_trace_aleatorio.csv"
 ```
